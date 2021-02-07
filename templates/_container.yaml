@@ -1,0 +1,15 @@
+{{- define "common.container.tpl" -}}
+name: {{ .Chart.Name }}
+image: "{{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}"
+imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
+ports:
+- name: http
+  containerPort: {{ .Values.deployment.container.port }}
+resources:
+{{ toYaml .Values.deployment.resources | indent 2 }}
+{{- end -}}
+{{- define "common.container" -}}
+{{- /* clear new line so indentation works correctly */ -}}
+{{- println "" -}}
+{{- include "common.util.merge" (append . "common.container.tpl") | indent 8 -}}
+{{- end -}}

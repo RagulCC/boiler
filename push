@@ -1,0 +1,10 @@
+#!/bin/bash
+
+echo "Adding new changes"
+git add .
+
+echo "Commit new changes"
+git commit -m "Environments"
+
+echo "Push new changes"
+git push origin main 

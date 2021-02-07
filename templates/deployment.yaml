@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+{{ template "common.metadata" . }}
+  {{- if .Values.deployment.annotations }}
+  annotations:
+    {{ .Values.deployment.annotations | indent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: {{ template "common.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "common.name" . }}
+        release: {{ .Release.Name | quote }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: {{ .Values.ContainerImage }}
+        imagePullPolicy: Always
+        ports:
+         - name: http
+           containerPort: {{ .Values.ContainerPort }}

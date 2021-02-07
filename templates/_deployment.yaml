@@ -1,0 +1,31 @@
+{{- define "common.deployment.tpl" -}}
+apiVersion: apps/v1
+kind: Deployment
+{{ template "common.metadata" . }}
+  {{- if .Values.deployment.annotations }}
+  annotations:
+    {{ include "common.annote" .Values.deployment.annotations | indent 4 }}
+  {{- end }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "common.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "common.name" . }}
+        release: {{ .Release.Name | quote }}
+    spec:
+      containers:
+      -
+{{ include "common.container.tpl" . | indent 8 }}
+        {{- if .Values.deployment.config }}
+        envFrom:
+        - configMapRef:
+            name: {{ template "common.fullname" . }} 
+        {{- end }}
+{{- end -}}
+{{- define "common.deployment" -}}
+{{- template "common.util.merge" (append . "common.deployment.tpl") -}}
+{{- end -}}
